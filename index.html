@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University CGPA Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 1s;
+        }
+
+        .calculator {
+            margin-bottom: 20px;
+        }
+
+        .select-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+   
+}
+
+
+        .select-container select {
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+            transition: box-shadow 0.3s;
+            flex-grow: 1;
+            margin-right: 10px;
+            border: 1px solid black; /* Add this line to set border color */
+        }
+
+        .select-container select:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        .select-container button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .select-container button:hover {
+            background-color: #555;
+        }
+
+        label, select {
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        .result {
+            text-align: center;
+        }
+
+        .result h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #cgpaResult {
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .subject {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 10px;
+        }
+
+        .subject span {
+            font-weight: bold;
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .subject label {
+            display: inline-block;
+            width: 60px;
+            text-align: center;
+            margin: 0 5px;
+            font-size: 1.1em;
+        }
+
+        .subject input[type="radio"] {
+            margin: 0;
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>GPA Calculator</h1>
+    </header>
+    <main>
+        <div class="calculator">
+            <div class="select-container">
+
+
+                <select id="semester">
+                    <option value="sem">Semesters</option>
+                    <option value="sem1">Semester 1</option>
+                    <option value="sem2">Semester 2</option>
+                    <option value="sem3">Semester 3</option>
+                    <option value="sem4">Semester 4</option>
+                </select>
+
+                <select id="department">
+                    <option value="dept">Departments</option>
+                    <option value="dept1">Computer Science </option>
+		    <option value="dept2">Information Technology </option>
+                    <option value="dept3">Automobile </option>
+                </select>
+
+                
+
+                
+            </div>
+
+            <h2>Subjects and Grades</h2>
+            <div id="subjects"></div>
+        </div>
+
+        <div class="result">
+            <h2>Your CGPA is:</h2>
+            <span id="cgpaResult"></span>
+        </div>
+     <button onclick="calculateCGPA()">Calculate CGPA</button>
+    </main>
+
+    <script>
+        document.getElementById('department').addEventListener('change', function() {
+            let department = this.value;
+            let semester = document.getElementById('semester').value;
+            let subjectsContainer = document.getElementById('subjects');
+            subjectsContainer.innerHTML = '';
+
+            if (department === 'dept2' && semester === 'sem4') {
+                let subjects = [
+                    { name: 'Introduction to Operating Systems', code: 'CS3451', internalMark: 3 },
+                    { name: 'Theory of Computation', code: 'CS3452', internalMark: 3 },
+                    { name: 'Operating Systems Laboratory', code: 'CS3461', internalMark: 1.5 },
+                    { name: 'Database Management Systems Laboratory', code: 'CS3481', internalMark: 1.5 },
+                    { name: 'Artificial Intelligence and Machine Learning', code: 'CS3491', internalMark: 4 },
+                    { name: 'Database Management Systems', code: 'CS3492', internalMark: 3 },
+                    { name: 'Environmental Science and Sustainability', code: 'GE3451', internalMark: 2 },
+                    { name: 'Web Essentials', code: 'IT3401', internalMark: 4 },
+                    { name: 'Naan Mudhalwan', code: 'SB8025', internalMark: 1 },
+                ]; // Example subjects
+
+                subjects.forEach(subject => {
+                    let subjectDiv = document.createElement('div');
+                    subjectDiv.classList.add('subject');
+                    subjectDiv.innerHTML = `
+                        <span>${subject.name} (${subject.code}):</span>
+                        <label><input type="radio" name="${subject.code}" value="10"> O</label>
+                        <label><input type="radio" name="${subject.code}" value="9"> A+</label>
+                        <label><input type="radio" name="${subject.code}" value="8"> A</label>
+                        <label><input type="radio" name="${subject.code}" value="7"> B+</label>
+                        <label><input type="radio" name="${subject.code}" value="6"> B</label>
+                        <label><input type="radio" name="${subject.code}" value="5"> C</label>
+                        <input type="hidden" name="${subject.code}_internal" value="${subject.internalMark}">
+                    `;
+                    subjectsContainer.appendChild(subjectDiv);
+                });
+            } else {
+                subjectsContainer.innerHTML = 'Please select Department  and Semester  correctly.';
+            }
+        });
+
+        function calculateCGPA() {
+            let totalMarks = 0;
+            let totalInternalMarks = 0; 
+
+            let subjects = document.querySelectorAll('.subject input[type="radio"]:checked');
+            subjects.forEach(subject => {
+                let marks = parseFloat(subject.value);
+                if (!isNaN(marks)) {
+                    let subjectCode = subject.name;
+                    let internalMarksInput = document.querySelector(`input[name="${subjectCode}_internal"]`);
+                    if (internalMarksInput) {
+                        let internalMarks = parseFloat(internalMarksInput.value);
+                        if (!isNaN(internalMarks)) {
+                            marks *= internalMarks;
+                            totalMarks += marks;
+                            totalInternalMarks += internalMarks; 
+                        }
+                    }
+                }
+            });
+
+            let gpa;
+            if (totalInternalMarks > 0) {
+                gpa = totalMarks / totalInternalMarks;
+            } else {
+                gpa = NaN; // Set gpa to NaN if totalInternalMarks is zero
+            }
+
+            if (!isNaN(gpa)) {
+                document.getElementById('cgpaResult').textContent = gpa.toFixed(2);
+            } else {
+                document.getElementById('cgpaResult').textContent = "N/A";
+            }
+        }
+    </script>
+</body>
+</html>
